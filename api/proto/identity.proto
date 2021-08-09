@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package users;
+
+import "google/protobuf/empty.proto";
+
+message CreateUserRequest {
+  required string id = 1;
+  required string emailAddress = 2;
+  required string password = 3;
+}
+
+service IdentityService {
+  rpc CreateUser(CreateUserRequest) returns (google.protobuf.Empty) {}
+}

@@ -1,0 +1,69 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Message Board Identity
+  description: TODO
+  contact:
+    name: TODO
+    url: https://todo/
+servers:
+  - url: https://{hostname}/api
+    variables:
+      hostname:
+        default: localhost
+security:
+  - bearerAuth: []
+paths:
+  /identity/create:
+    post:
+      operationId: createUser
+      requestBody:
+        description: todo
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserRequest'
+      respnoses:
+        '204':
+          description: todo
+          content:
+            application/json:
+              schema:
+                $ref: ''
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    CreateUserRequest:
+      type: object
+      required: [id, emailAddress, password]
+      properties:
+        id:
+          type: string
+          format: uuid
+        emailAddress:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+    Error:
+      type: object
+      required:
+        - slug
+        - message
+      properties:
+        slug:
+          type: string
+        message:
+          type: string
