@@ -21,7 +21,7 @@ func main() {
 	serverType := strings.ToLower(os.Getenv("SERVER_TO_RUN"))
 	switch serverType {
 	case "http":
-		server.RunHTTPServer(func(router chi.Router) http.Handler {
+		http.RunServer(func(router chi.Router) http.Handler {
 			return ports.HandlerFromMux(
 				ports.NewHttpServer(application),
 				router,
