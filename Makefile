@@ -6,8 +6,8 @@ GRPC_OUT := pkg
 
 .PHONY: openapi
 openapi:
-	oapi-codegen -generate types -o ports/openapi_types.gen.go -package ports api/openapi/identity.yml
-	oapi-codegen -generate chi-server -o ports/openapi_api.gen.go -package ports api/openapi/trainings.yml
+	oapi-codegen -generate types -o internal/interfaces/rest/openapi_types.gen.go -package rest api/openapi/identity.yaml
+	oapi-codegen -generate chi-server -o internal/interfaces/rest/openapi_api.gen.go -package rest api/openapi/identity.yaml
 
 .PHONY: proto
 proto:

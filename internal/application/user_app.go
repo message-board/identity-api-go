@@ -1,14 +1,14 @@
 package app
 
 import (
-	"github.com/message-board/identity/internal/domain"
+	"github.com/message-board/identity-go/internal/domain"
 )
 
 type userApp struct {
 	repo domain.UserRepository
 }
 
-var _ UserAppInterface = &userApp {}
+var _ UserAppInterface = &userApp{}
 
 type UserAppInterface interface {
 	CreateUser(*domain.User)

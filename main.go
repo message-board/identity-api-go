@@ -1,29 +1,26 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"net/http"
 	"os"
 	"strings"
 
-	"github.com/go-chi/chi"
-	"github.com/message-board/identity/ports"
-	"github.com/message-board/identity/server"
-	"github.com/message-board/identity/service"
+	"github.com/go-chi/chi/v5"
+	"github.com/message-board/identity-go/internal/interfaces/rest"
 )
 
 func main() {
-	ctx := context.Background()
+	// ctx := context.Background()
 
-	application := service.NewApplication(ctx)
+	// application := service.NewApplication(ctx)
 
 	serverType := strings.ToLower(os.Getenv("SERVER_TO_RUN"))
 	switch serverType {
 	case "http":
-		http.RunServer(func(router chi.Router) http.Handler {
-			return ports.HandlerFromMux(
-				ports.NewHttpServer(application),
+		rest.RunServer(func(router chi.Router) http.Handler {
+			return rest.HandlerFromMux(
+				rest.NewUserResource(),
 				router,
 			)
 		})

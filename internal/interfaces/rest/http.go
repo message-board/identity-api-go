@@ -1,12 +1,12 @@
-package http
+package rest
 
 import (
 	"net/http"
 	"os"
 	"strings"
 
-	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/api/option"
@@ -16,7 +16,7 @@ func RunServer(createHandler func(router chi.Router) http.Handler) {
 	RunServerOnAddr(":"+os.Getenv("PORT"), createHandler)
 }
 
-func RunServerOnAddr(addr string, createHandler func(router chi.Router) http.Handler)  {
+func RunServerOnAddr(addr string, createHandler func(router chi.Router) http.Handler) {
 	apiRouter := chi.NewRouter()
 	setMiddlewares(apiRouter)
 
