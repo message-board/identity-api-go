@@ -13,8 +13,8 @@ const (
 
 // CreateUserRequest defines model for CreateUserRequest.
 type CreateUserRequest struct {
-	EmailAddress openapi_types.Email `json:"emailAddress"`
 	Id           string              `json:"id"`
+	EmailAddress openapi_types.Email `json:"emailAddress"`
 	Password     string              `json:"password"`
 }
 

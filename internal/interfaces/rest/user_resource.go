@@ -3,15 +3,20 @@ package rest
 import (
 	"net/http"
 
+	"github.com/ThreeDotsLabs/watermill/components/cqrs"
 	"github.com/go-chi/render"
+	"github.com/message-board/identity-go/internal/interfaces/handlers/createuser"
 	"github.com/message-board/identity-go/pkg/requests"
 )
 
 type UserResource struct {
+	commandBus *cqrs.CommandBus
 }
 
-func NewUserResource() UserResource {
-	return UserResource{}
+func NewUserResource(commandBus *cqrs.CommandBus) UserResource {
+	return UserResource{
+		commandBus: commandBus,
+	}
 }
 
 func (ur UserResource) CreateUser(w http.ResponseWriter, r *http.Request) {
@@ -27,7 +32,10 @@ func (ur UserResource) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// command := command.NewCreateUserCommand(request.Id, request.EmailAddress, request.Password)
+	createUser := createuser.NewCreateUser(request.Id, request.EmailAddress, request.Password)
+	if err := ur.commandBus.Send(r.Context(), createUser); err != nil {
+		panic(err)
+	}
 	// err := h.app.Commands.CreateUserCommandHandler.Handle(r.Context(), command)
 	// if err != nil {
 	// 	util.WriteResponse(w, "Failed to create user "+err.Error(), http.StatusInternalServerError)

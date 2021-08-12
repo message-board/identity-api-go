@@ -14,7 +14,7 @@ servers:
 security:
   - bearerAuth: []
 paths:
-  /identity/create:
+  /user/create:
     post:
       operationId: createUser
       requestBody:

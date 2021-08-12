@@ -13,7 +13,7 @@ import (
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 
-	// (POST /identity/create)
+	// (POST /user/create)
 	CreateUser(w http.ResponseWriter, r *http.Request)
 }
 
@@ -80,7 +80,7 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 	}
 
 	r.Group(func(r chi.Router) {
-		r.Post(options.BaseURL+"/identity/create", wrapper.CreateUser)
+		r.Post(options.BaseURL+"/user/create", wrapper.CreateUser)
 	})
 
 	return r
