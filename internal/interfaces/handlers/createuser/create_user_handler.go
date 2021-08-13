@@ -19,7 +19,7 @@ func NewCreateUserHandler(eb *cqrs.EventBus) CreateUserHandler {
 }
 
 func (h CreateUserHandler) HandlerName() string {
-	return "BookRoomHandler"
+	return "CreateUserHandler"
 }
 
 // NewCommand returns type of command which this handle should handle. It must be a pointer.

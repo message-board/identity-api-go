@@ -23,10 +23,8 @@ func main() {
 	logger := watermill.NewStdLogger(false, false)
 	cqrsMarshaler := cqrs.JSONMarshaler{}
 
-	pubSub := gochannel.NewGoChannel(
-		gochannel.Config{},
-		logger,
-	)
+	commandsConfig := gochannel.Config{}
+	commandsPublisher := gochannel.NewGoChannel(commandsConfig, logger)
 
 	// You can use any Pub/Sub implementation from here: https://watermill.io/docs/pub-sub-implementations/
 	// Detailed RabbitMQ implementation: https://watermill.io/docs/pub-sub-implementations/#rabbitmq-amqp
@@ -43,6 +41,7 @@ func main() {
 
 	// Events will be published to PubSub configured Rabbit, because they may be consumed by multiple consumers.
 	// (in that case BookingsFinancialReport and OrderBeerOnRoomBooked).
+	eventsPublisher := gochannel.NewGoChannel(gochannel.Config{}, logger)
 	// eventsPublisher, err := amqp.NewPublisher(amqp.NewDurablePubSubConfig(amqpAddress, nil), logger)
 	// if err != nil {
 	// 	panic(err)
@@ -73,7 +72,7 @@ func main() {
 				createuser.NewCreateUserHandler(eb),
 			}
 		},
-		CommandsPublisher: pubSub,
+		CommandsPublisher: commandsPublisher,
 		CommandsSubscriberConstructor: func(handlerName string) (message.Subscriber, error) {
 			// we can reuse subscriber, because all commands have separated topics
 			return commandsSubscriber, nil
@@ -96,7 +95,7 @@ func main() {
 			)
 
 			return amqp.NewSubscriber(config, logger)
-			//return pubSub.Subscribe(ctx, handlerName)
+			// return eventsPublisher.Subscribe(ctx, handlerName)
 		},
 		Router:                router,
 		CommandEventMarshaler: cqrsMarshaler,
