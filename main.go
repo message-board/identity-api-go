@@ -25,6 +25,7 @@ func main() {
 
 	commandsConfig := gochannel.Config{}
 	commandsPublisher := gochannel.NewGoChannel(commandsConfig, logger)
+	commandsSubscriber := NewSubscriber(commandsConfig, logger)
 
 	// You can use any Pub/Sub implementation from here: https://watermill.io/docs/pub-sub-implementations/
 	// Detailed RabbitMQ implementation: https://watermill.io/docs/pub-sub-implementations/#rabbitmq-amqp
@@ -89,13 +90,8 @@ func main() {
 		},
 		EventsPublisher: eventsPublisher,
 		EventsSubscriberConstructor: func(handlerName string) (message.Subscriber, error) {
-			config := amqp.NewDurablePubSubConfig(
-				amqpAddress,
-				amqp.GenerateQueueNameTopicNameWithSuffix(handlerName),
-			)
-
-			return amqp.NewSubscriber(config, logger)
-			// return eventsPublisher.Subscribe(ctx, handlerName)
+			config := gochannel.Config{}
+			return NewSubscriber(config, logger), nil
 		},
 		Router:                router,
 		CommandEventMarshaler: cqrsMarshaler,
