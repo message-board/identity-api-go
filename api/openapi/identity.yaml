@@ -14,7 +14,22 @@ servers:
 security:
   - bearerAuth: []
 paths:
-  /user/create:
+  /users:
+    get:
+      operationId: getUsers
+      responses:
+        '200':
+          description: todo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Users'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     post:
       operationId: createUser
       requestBody:
@@ -31,6 +46,30 @@ paths:
             application/json:
               schema:
                 $ref: ''
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /users/{userId}:
+    get:
+      operationId: getUser
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: todo
+      responses:
+        '200':
+          description: todo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
         default:
           description: unexpected error
           content:
@@ -57,6 +96,24 @@ components:
         password:
           type: string
           format: password
+    User:
+      type: object
+      required: [id, emailAddress]
+      properties:
+        id:
+          type: string
+          format: uuid
+        emailAddress:
+          type: string
+          format: email
+    Users:
+      type: object
+      required: [users]
+      properties:
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
     Error:
       type: object
       required:

@@ -13,9 +13,26 @@ const (
 
 // CreateUserRequest defines model for CreateUserRequest.
 type CreateUserRequest struct {
-	Id           string              `json:"id"`
 	EmailAddress openapi_types.Email `json:"emailAddress"`
+	Id           string              `json:"id"`
 	Password     string              `json:"password"`
+}
+
+// Error defines model for Error.
+type Error struct {
+	Message string `json:"message"`
+	Slug    string `json:"slug"`
+}
+
+// User defines model for User.
+type User struct {
+	EmailAddress openapi_types.Email `json:"emailAddress"`
+	Id           string              `json:"id"`
+}
+
+// Users defines model for Users.
+type Users struct {
+	Users []User `json:"users"`
 }
 
 // CreateUserJSONBody defines parameters for CreateUser.

@@ -42,7 +42,8 @@ func main() {
 	// You can use facade, or create buses and processors manually (you can inspire with cqrs.NewFacade)
 	cqrsFacade, err := cqrs.NewFacade(cqrs.FacadeConfig{
 		GenerateCommandsTopic: func(commandName string) string {
-			return commandName
+			parts := strings.Split(commandName, ".")
+			return "identity." + parts[len(parts)-1]
 		},
 		CommandHandlers: func(cb *cqrs.CommandBus, eb *cqrs.EventBus) []cqrs.CommandHandler {
 			return []cqrs.CommandHandler{
@@ -55,11 +56,8 @@ func main() {
 			return ch, nil
 		},
 		GenerateEventsTopic: func(eventName string) string {
-			// because we are using PubSub RabbitMQ config, we can use one topic for all events
-			return "events"
-
-			// we can also use topic per event type
-			// return eventName
+			parts := strings.Split(eventName, ".")
+			return "identity." + parts[len(parts)-1]
 		},
 		EventHandlers: nil,
 		// EventHandlers: func(cb *cqrs.CommandBus, eb *cqrs.EventBus) []cqrs.EventHandler {

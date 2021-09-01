@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/ThreeDotsLabs/watermill/components/cqrs"
+	openapi_types "github.com/deepmap/oapi-codegen/pkg/types"
 	"github.com/go-chi/render"
 	"github.com/message-board/identity-go/internal/interfaces/handlers/createuser"
 	"github.com/message-board/identity-go/pkg/requests"
@@ -43,6 +44,23 @@ func (ur UserResource) CreateUser(w http.ResponseWriter, r *http.Request) {
 	// }
 
 	w.WriteHeader(http.StatusNoContent)
+}
+
+func (ur UserResource) GetUsers(w http.ResponseWriter, r *http.Request) {
+	users := Users{
+		Users: []User{},
+	}
+
+	render.Respond(w, r, users)
+}
+
+func (ur UserResource) GetUser(w http.ResponseWriter, r *http.Request, userId string) {
+	user := User{
+		Id:           userId,
+		EmailAddress: (openapi_types.Email)(userId + "@test.com"),
+	}
+
+	render.Respond(w, r, user)
 }
 
 //--
