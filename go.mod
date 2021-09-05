@@ -3,6 +3,7 @@ module github.com/message-board/identity-go
 go 1.16
 
 require (
+	github.com/ThreeDotsLabs/watermill v1.1.1
 	github.com/deepmap/oapi-codegen v1.8.2
 	github.com/go-chi/chi/v5 v5.0.0
 	github.com/go-chi/cors v1.2.0
