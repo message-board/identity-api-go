@@ -10,6 +10,8 @@ require (
 	github.com/go-chi/render v1.0.1
 	github.com/google/uuid v1.3.0
 	github.com/sirupsen/logrus v1.8.1
+	github.com/swaggo/http-swagger v1.1.1
+	github.com/swaggo/swag v1.7.0
 	golang.org/x/crypto v0.0.0-20201221181555-eec23a3978ad
 	google.golang.org/api v0.52.0
 )

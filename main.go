@@ -17,6 +17,20 @@ import (
 	"github.com/message-board/identity-go/internal/interfaces/rest"
 )
 
+// @title Message Board Identity Api
+// @version 1.0
+// @description TODO.
+// @termsOfService http://todo.io/terms
+
+// @contact.name TODO
+// @contact.url http://todo.io/support
+// @contact.email support@todo.io
+
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host petstore.swagger.io
+// @BasePath /v1
 func main() {
 	ctx := context.Background()
 

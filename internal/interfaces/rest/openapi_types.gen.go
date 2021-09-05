@@ -26,8 +26,8 @@ type Error struct {
 
 // User defines model for User.
 type User struct {
-	EmailAddress openapi_types.Email `json:"emailAddress"`
-	Id           string              `json:"id"`
+	EmailAddress string `json:"emailAddress"`
+	Id           string `json:"id"`
 }
 
 // Users defines model for Users.

@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/ThreeDotsLabs/watermill/components/cqrs"
-	openapi_types "github.com/deepmap/oapi-codegen/pkg/types"
 	"github.com/go-chi/render"
 	"github.com/message-board/identity-go/internal/interfaces/handlers/createuser"
 	"github.com/message-board/identity-go/pkg/requests"
@@ -20,6 +19,58 @@ func NewUserResource(commandBus *cqrs.CommandBus) UserResource {
 	}
 }
 
+// ListUsers godoc
+// @Summary List users
+// @Description get users
+// @Tags users
+// @Accept  json
+// @Produce  json
+// @Success 200 {array} rest.Users
+// @Failure 400 {object} rest.Error
+// @Failure 404 {object} rest.Error
+// @Failure 500 {object} rest.Error
+// @Router /api/users [get]
+func (ur UserResource) GetUsers(w http.ResponseWriter, r *http.Request) {
+	users := Users{
+		Users: []User{},
+	}
+
+	render.Respond(w, r, users)
+}
+
+// GetUser godoc
+// @Summary Get user
+// @Description get user by id
+// @Tags users
+// @Accept  json
+// @Produce  json
+// @Param id path int true "User ID"
+// @Success 200 {object} rest.User
+// @Failure 400 {object} rest.Error
+// @Failure 404 {object} rest.Error
+// @Failure 500 {object} rest.Error
+// @Router /api/users/{id} [get]
+func (ur UserResource) GetUser(w http.ResponseWriter, r *http.Request, id string) {
+	user := User{
+		Id:           id,
+		EmailAddress: id + "@test.com",
+	}
+
+	render.Respond(w, r, user)
+}
+
+// CreateUser godoc
+// @Summary Create user
+// @Description create user
+// @Tags users
+// @Accept  json
+// @Produce  json
+// @Param user body requests.CreateUserRequest true "Create user"
+// @Success 200 {object} rest.User
+// @Failure 400 {object} rest.Error
+// @Failure 404 {object} rest.Error
+// @Failure 500 {object} rest.Error
+// @Router /api/users [post]
 func (ur UserResource) CreateUser(w http.ResponseWriter, r *http.Request) {
 	headerContentTtype := r.Header.Get("Content-Type")
 	if headerContentTtype != "application/json" {
@@ -44,23 +95,6 @@ func (ur UserResource) CreateUser(w http.ResponseWriter, r *http.Request) {
 	// }
 
 	w.WriteHeader(http.StatusNoContent)
-}
-
-func (ur UserResource) GetUsers(w http.ResponseWriter, r *http.Request) {
-	users := Users{
-		Users: []User{},
-	}
-
-	render.Respond(w, r, users)
-}
-
-func (ur UserResource) GetUser(w http.ResponseWriter, r *http.Request, userId string) {
-	user := User{
-		Id:           userId,
-		EmailAddress: (openapi_types.Email)(userId + "@test.com"),
-	}
-
-	render.Respond(w, r, user)
 }
 
 //--
