@@ -14,6 +14,7 @@ import (
 	"github.com/ThreeDotsLabs/watermill/pubsub/gochannel"
 	"github.com/go-chi/chi/v5"
 	"github.com/message-board/identity-go/internal/interfaces/handlers/createuser"
+	"github.com/message-board/identity-go/internal/interfaces/handlers/usercreated"
 	"github.com/message-board/identity-go/internal/interfaces/rest"
 )
 
@@ -32,11 +33,13 @@ import (
 // @host petstore.swagger.io
 // @BasePath /v1
 func main() {
-	ctx := context.Background()
+	// ctx := context.Background()
 
 	logger := watermill.NewStdLogger(false, false)
 	cqrsMarshaler := cqrs.JSONMarshaler{}
 
+	// Since we are using the go channel implementation we could remove commandsPublisher, commandsSubscriber and  eventsPublisher, to be simple.
+	// And then we need to replace the commandsPublisher, commandsSubscriber and  eventsPublisher with the channel 
 	ch := gochannel.NewGoChannel(gochannel.Config{Persistent: true}, logger)
 
 	// CQRS is built on messages router. Detailed documentation: https://watermill.io/docs/messages-router/
@@ -56,28 +59,26 @@ func main() {
 	// You can use facade, or create buses and processors manually (you can inspire with cqrs.NewFacade)
 	cqrsFacade, err := cqrs.NewFacade(cqrs.FacadeConfig{
 		GenerateCommandsTopic: func(commandName string) string {
-			parts := strings.Split(commandName, ".")
-			return "identity." + parts[len(parts)-1]
+			return commandName
 		},
 		CommandHandlers: func(cb *cqrs.CommandBus, eb *cqrs.EventBus) []cqrs.CommandHandler {
 			return []cqrs.CommandHandler{
 				createuser.NewCreateUserHandler(eb),
 			}
 		},
-		CommandsPublisher: ch,
+		CommandsPublisher: ch, // <-- Here
 		CommandsSubscriberConstructor: func(handlerName string) (message.Subscriber, error) {
-			// we can reuse subscriber, because all commands have separated topics
-			return ch, nil
+			return ch, nil // <-- Here  
 		},
 		GenerateEventsTopic: func(eventName string) string {
-			parts := strings.Split(eventName, ".")
-			return "identity." + parts[len(parts)-1]
+			return "events"
 		},
-		EventHandlers: nil,
-		// EventHandlers: func(cb *cqrs.CommandBus, eb *cqrs.EventBus) []cqrs.EventHandler {
-		// 	return []cqrs.EventHandler{}
-		// },
-		EventsPublisher: ch,
+		EventHandlers: func(cb *cqrs.CommandBus, eb *cqrs.EventBus) []cqrs.EventHandler {
+			return []cqrs.EventHandler{
+				usercreated.NewUserCreatedHandler(cb),
+			}
+		},
+		EventsPublisher: ch, // <-- Here
 		EventsSubscriberConstructor: func(handlerName string) (message.Subscriber, error) {
 			return ch, nil // <-- Here
 		},
@@ -106,7 +107,7 @@ func main() {
 	}
 
 	// processors are based on router, so they will work when router will start
-	if err := router.Run(ctx); err != nil {
+	if err := router.Run(context.Background()); err != nil {
 		panic(err)
 	}
 }
